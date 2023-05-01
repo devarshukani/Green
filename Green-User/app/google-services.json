@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "912049032017",
+    "project_id": "project-green-e87ff",
+    "storage_bucket": "project-green-e87ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912049032017:android:d932984bb3a4fe0d0fa170",
+        "android_client_info": {
+          "package_name": "com.devarshukani.green_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912049032017-rnoff831b7nqgaejr25dvoao551qbq9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_Tmj3qC51CfxGeZHz-gMynQi3Y1a8Jxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912049032017-rnoff831b7nqgaejr25dvoao551qbq9k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

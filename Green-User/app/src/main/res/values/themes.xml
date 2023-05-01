@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+    <style name="Base.Theme.GreenUser" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/green</item>
+        <item name="colorSecondary">@color/white</item>
+
+    </style>
+
+    <style name="Theme.GreenUser" parent="Base.Theme.GreenUser" />
+</resources>
