@@ -1,14 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Home Fragment" />
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/helloHomeTextView"
+            android:text="Hello Devarsh,"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/darkgray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/nameHomeTextView"
+            android:text="Together, we can create a greener, more sustainable world."
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            app:cardCornerRadius="10dp"
+            app:cardUseCompatPadding="false"
+            app:cardElevation="0dp"
+            android:layout_marginTop="40dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garbage_van_collecting"
+                android:scaleType="centerCrop"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardUseCompatPadding="false"
+            app:cardElevation="0dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/lightgray">
+
+            <TextView
+                android:id="@+id/wasteRecycleCountTextView"
+                android:text="15kg of waste recycled! Thank you for helping us preserve the planet."
+                android:textSize="20sp"
+                android:textColor="@color/darkgray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/qrCodeButton"
+                android:text="QR Code"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/button_secondary_background"
+                android:textColor="@color/darkgray"
+                android:padding="18dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:elevation="0dp"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                android:layout_marginRight="10dp"
+                android:drawableTop="@drawable/ic_qr_code" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/redeemPointsHomeButton"
+                android:text="Redeem Points"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/button_secondary_background"
+                android:textColor="@color/darkgray"
+                android:padding="18dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:elevation="0dp"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                android:layout_marginLeft="10dp"
+                android:drawableTop="@drawable/ic_green_coin_small"/>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/logoutButton"
+            android:text="Logout"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#CD2B49"
+            android:padding="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_secondary_background"
+            android:elevation="0dp"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null" />
+
+
+    </LinearLayout>
+
+
+</ScrollView>

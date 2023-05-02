@@ -8,14 +8,22 @@
     android:background="@color/white">
 
     <TextView
-        android:id="@+id/loginTitle"
-        android:text="Login"
-        android:textSize="35sp"
+        android:id="@+id/loginTitle1"
+        android:text="Hello Again!"
+        android:textSize="40sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/darkgray"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/loginTitle2"
+        android:text="Make every day Earth Day"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/loginEmail"
@@ -41,17 +49,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
         android:text="Login"
         android:textSize="18sp"
         android:textStyle="bold"
         android:background="@drawable/button_background"
         android:textColor="@color/white"
-        android:padding="15dp"
+        android:padding="18dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="32dp"
+        android:elevation="0dp"
+        android:textAllCaps="false"
+        android:stateListAnimator="@null" />
 
     <TextView
         android:id="@+id/registerLink"
@@ -60,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="32dp"
+        android:textColor="@color/darkgray"/>
 
 </LinearLayout>

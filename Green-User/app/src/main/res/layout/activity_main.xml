@@ -29,7 +29,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:text="Project Green"
-            android:textColor="@color/green"
+            android:textColor="@color/darkgray"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textViewContent"
@@ -43,12 +43,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="25dp"
             android:text="Join us in our efforts to preserve the beauty of our city by keeping it clean."
-            android:textColor="@color/black"
+            android:textColor="@color/darkgray"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/buttonGetStarted"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonGetStarted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,14 +56,17 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="32dp"
             android:background="@drawable/button_background"
-            android:padding="15dp"
+            android:padding="18dp"
             android:text="Get Started"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="0dp"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

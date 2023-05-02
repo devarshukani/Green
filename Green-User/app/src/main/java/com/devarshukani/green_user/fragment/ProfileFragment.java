@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,19 @@ import com.devarshukani.green_user.R;
 import com.devarshukani.green_user.activity.HomeActivity;
 import com.devarshukani.green_user.activity.LoginActivity;
 import com.devarshukani.green_user.activity.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +75,8 @@ public class ProfileFragment extends Fragment {
 
 
     FirebaseAuth auth;
-    Button logoutButton;
+    FirebaseFirestore db;
+    Button logoutButton, editProfileButton, redeemPointsProfileButton;
     TextView username_text;
 
     @Override
@@ -81,11 +96,72 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         logoutButton = view.findViewById(R.id.logoutButton);
         username_text = view.findViewById(R.id.username_text);
+        editProfileButton = view.findViewById(R.id.editProfileButton);
+        redeemPointsProfileButton = view.findViewById(R.id.redeemPointsProfileButton);
 
         username_text.setText(auth.getCurrentUser().getEmail());
+
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> user = new HashMap<>();
+                user.put("first", "dada");
+                user.put("last", "Lovelace");
+                user.put("born", 1815);
+
+                db.collection("users").document(auth.getCurrentUser().getUid())
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(getActivity(), "Successfully added to firestore", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Error", "Error adding document", e);
+                                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+            }
+        });
+
+        redeemPointsProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("users").document(auth.getCurrentUser().getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    String field1 = documentSnapshot.getString("first");
+                                    String field2 = documentSnapshot.getString("last");
+
+                                    Log.d("Answer", "Field 1: " + field1);
+                                    Log.d("Answer", "Field 2: " + field2);
+                                } else {
+                                    Log.d("Error", "Document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Error", "Error getting document", e);
+                            }
+                        });
+            }
+
+        });
+
+
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
