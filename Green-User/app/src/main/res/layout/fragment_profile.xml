@@ -38,7 +38,8 @@
             android:textSize="20sp"
             android:layout_marginTop="10dp"
             android:textColor="@color/darkgray"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
         <Button
             android:id="@+id/editProfileButton"
@@ -51,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawableLeft="@drawable/ic_edit"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/sf_pro_display_regular"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -75,8 +77,8 @@
                     android:layout_gravity="center">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:src="@drawable/ic_green_coin" />
 
                 </LinearLayout>
@@ -88,20 +90,24 @@
                     android:layout_marginLeft="16dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Green Points"
-                        android:textColor="@color/darkgray"
-                        android:textSize="16sp"/>
-
-                    <TextView
                         android:id="@+id/points_earned_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="50345"
                         android:textColor="@color/green"
-                        android:textStyle="bold"
-                        android:textSize="30sp"/>
+                        android:textSize="30sp"
+                        android:fontFamily="@font/sf_pro_display_bold"/>
+
+                    <TextView
+                        android:layout_marginTop="-5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Green Points"
+                        android:textColor="@color/darkgray"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/sf_pro_display_regular"/>
+
+
 
 
 
@@ -124,7 +130,8 @@
             android:background="@drawable/button_secondary_background"
             android:elevation="0dp"
             android:textAllCaps="false"
-            android:stateListAnimator="@null" />
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
 
 
@@ -143,7 +150,8 @@
             android:background="@drawable/button_secondary_background"
             android:elevation="0dp"
             android:textAllCaps="false"
-            android:stateListAnimator="@null" />
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
 
     </LinearLayout>

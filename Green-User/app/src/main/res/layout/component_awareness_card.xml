@@ -8,26 +8,31 @@
     app:cardUseCompatPadding="false"
     app:cardElevation="0dp"
     android:backgroundTint="@color/lightgray"
-    android:layout_marginTop="20dp">
+    android:layout_marginBottom="20dp">
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="25dp"
-        android:id="@+id/titleTextView"/>
+    android:padding="20dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:justificationMode="inter_word"
-        android:id="@+id/descriptionTextView"/>
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:id="@+id/titleTextView"
+        android:textStyle="bold"
+        android:fontFamily="@font/sf_pro_display_regular"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:justificationMode="inter_word"
+        android:textSize="18sp"
+        android:id="@+id/descriptionTextView"
+        android:fontFamily="@font/sf_pro_display_regular"/>
 
 </LinearLayout>
 

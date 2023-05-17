@@ -22,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private TextView loginLink;
     private EditText registerEmail;
-    private EditText registerPassword;
+    private EditText registerPassword,registerRePassword;
     private Button registerButton;
 
     @Override
@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginLink = findViewById(R.id.loginLink);
         registerEmail = findViewById(R.id.registerEmail);
         registerPassword = findViewById(R.id.registerPassword);
+        registerRePassword = findViewById(R.id.registerRePassword);
         registerButton = findViewById(R.id.registerButton);
 
         auth = FirebaseAuth.getInstance();
@@ -42,12 +43,19 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = registerEmail.getText().toString().trim();
                 String password  = registerPassword.getText().toString().trim();
+                String repassword  = registerRePassword.getText().toString().trim();
 
                 if(email.isEmpty()){
                     registerEmail.setError("Email cannot be empty");
                 }
                 else if(password.isEmpty()){
                     registerPassword.setError("Password cannot be empty");
+                }
+                else if (repassword.isEmpty()) {
+                    registerRePassword.setError("Confirm Password cannot be empty");
+                }
+                else if (!repassword.equals(password)) {
+                    registerRePassword.setError("Values does not match");
                 }
                 else{
                     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

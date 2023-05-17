@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         auth = FirebaseAuth.getInstance();
-        Toast.makeText(this, auth.getCurrentUser().getEmail() , Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, auth.getCurrentUser().getEmail() , Toast.LENGTH_SHORT).show();
         Log.d("Current User : ", auth.getCurrentUser().getEmail());
 
 

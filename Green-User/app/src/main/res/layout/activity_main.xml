@@ -31,9 +31,9 @@
             android:text="Project Green"
             android:textColor="@color/darkgray"
             android:textSize="30sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textViewContent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
         <TextView
             android:id="@+id/textViewContent"
@@ -46,7 +46,8 @@
             android:textColor="@color/darkgray"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/buttonGetStarted"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/sf_pro_display_regular"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonGetStarted"
@@ -60,13 +61,13 @@
             android:text="Get Started"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:elevation="0dp"
             android:textAllCaps="false"
-            android:stateListAnimator="@null" />
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

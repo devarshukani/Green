@@ -17,14 +17,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        app:menu="@menu/bottom_navigation_menu"
+        android:background="@drawable/bg_bottom_navigation"
+        app:elevation="40dp"
+        app:itemActiveIndicatorStyle="@color/lightgray"
+        app:itemIconSize="32dp"
         app:itemIconTint="@drawable/bottom_nav_color_state"
         app:itemTextColor="@drawable/bottom_nav_color_state"
         app:labelVisibilityMode="unlabeled"
-        app:elevation="30dp"
-        android:background="@color/lightgray"
-        app:itemActiveIndicatorStyle="@color/lightgray"
-        app:itemIconSize="32dp"/>
+        app:menu="@menu/bottom_navigation_menu" />
+
 
 
 </RelativeLayout>

@@ -21,10 +21,10 @@
             android:id="@+id/helloHomeTextView"
             android:text="Hello Devarsh,"
             android:textSize="30sp"
-            android:textStyle="bold"
             android:textColor="@color/darkgray"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_display_bold"/>
 
         <TextView
             android:id="@+id/nameHomeTextView"
@@ -33,7 +33,8 @@
             android:textStyle="bold"
             android:textColor="@color/gray"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_display_regular"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -67,7 +68,8 @@
                 android:layout_height="wrap_content"
                 android:text="Waste Pickup"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/sf_pro_display_bold" />
 
             <TextView
                 android:id="@+id/button_subheading"
@@ -76,42 +78,22 @@
                 android:layout_below="@id/button_heading"
                 android:text="schedule your tomorrow's pickup"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/sf_pro_display_regular"/>
 
             <ImageView
                 android:id="@+id/button_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_awareness"
+                android:src="@drawable/ic_share_location"
+                android:scaleType="fitCenter"
                 android:layout_marginStart="8dp" />
 
         </RelativeLayout>
 
 
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="10dp"
-            app:cardUseCompatPadding="false"
-            app:cardElevation="0dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@color/lightgray">
-
-            <TextView
-                android:id="@+id/wasteRecycleCountTextView"
-                android:text="15kg of waste recycled! Thank you for helping us preserve the planet."
-                android:textSize="20sp"
-                android:textColor="@color/darkgray"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"/>
-
-        </androidx.cardview.widget.CardView>
 
 
         <LinearLayout
@@ -135,7 +117,8 @@
                 android:textAllCaps="false"
                 android:stateListAnimator="@null"
                 android:layout_marginRight="10dp"
-                android:drawableTop="@drawable/ic_qr_code" />
+                android:drawableTop="@drawable/ic_qr_code"
+                android:fontFamily="@font/sf_pro_display_regular"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/redeemPointsHomeButton"
@@ -153,27 +136,24 @@
                 android:textAllCaps="false"
                 android:stateListAnimator="@null"
                 android:layout_marginLeft="10dp"
-                android:drawableTop="@drawable/ic_green_coin_small"/>
+                android:drawableTop="@drawable/ic_green_coin_small"
+                android:fontFamily="@font/sf_pro_display_regular"/>
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/logoutButton"
-            android:text="Logout"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#CD2B49"
-            android:padding="18dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/wasteRecycleCountTextView"
+            android:text="15kg of waste recycled! Thank you for helping us preserve the planet."
+            android:textSize="20sp"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_secondary_background"
-            android:elevation="0dp"
-            android:textAllCaps="false"
-            android:stateListAnimator="@null" />
+            android:textStyle="bold"
+            android:fontFamily="@font/sf_pro_display_regular"/>
 
 
     </LinearLayout>
-
 
 </ScrollView>
