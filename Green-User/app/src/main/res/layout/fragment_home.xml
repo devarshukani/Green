@@ -14,7 +14,8 @@
         android:gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="40dp"
+        android:paddingBottom="100dp">
 
         <TextView
             android:id="@+id/helloHomeTextView"
@@ -34,10 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="200dp"
             app:cardCornerRadius="10dp"
             app:cardUseCompatPadding="false"
             app:cardElevation="0dp"
@@ -50,6 +50,47 @@
                 android:scaleType="centerCrop"/>
 
         </androidx.cardview.widget.CardView>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/button_background"
+            android:layout_marginTop="20dp"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/button_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waste Pickup"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/button_subheading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/button_heading"
+                android:text="schedule your tomorrow's pickup"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/button_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_awareness"
+                android:layout_marginStart="8dp" />
+
+        </RelativeLayout>
+
+
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
