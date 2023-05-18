@@ -13,6 +13,12 @@
         android:theme="@style/Theme.GreenUser"
         tools:targetApi="31">
         <activity
+            android:name=".activity.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.RegisterUserDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity

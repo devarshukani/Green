@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devarshukani.green_user.R;
+import com.devarshukani.green_user.activity.EditProfileActivity;
 import com.devarshukani.green_user.activity.HomeActivity;
 import com.devarshukani.green_user.activity.LoginActivity;
 import com.devarshukani.green_user.activity.MainActivity;
@@ -108,26 +109,28 @@ public class ProfileFragment extends Fragment {
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> user = new HashMap<>();
-                user.put("first", "dada");
-                user.put("last", "Lovelace");
-                user.put("born", 1815);
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivity(intent);
 
-                db.collection("users").document(auth.getCurrentUser().getUid())
-                        .set(user)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(getActivity(), "Successfully added to firestore", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("Error", "Error adding document", e);
-                                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+//                Map<String, Object> user = new HashMap<>();
+//                user.put("first", "dadnewwwwwwa");
+//                user.put("last", "Lovelace");
+//
+//                db.collection("users").document(auth.getCurrentUser().getUid())
+//                        .set(user)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void unused) {
+//                                Toast.makeText(getActivity(), "Successfully added to firestore", Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.w("Error", "Error adding document", e);
+//                                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
 
             }
         });
@@ -171,7 +174,7 @@ public class ProfileFragment extends Fragment {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("userId", null);
                 editor.apply();
-
+                auth.signOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
