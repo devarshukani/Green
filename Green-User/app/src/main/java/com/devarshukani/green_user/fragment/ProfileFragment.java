@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth auth;
     FirebaseFirestore db;
     Button logoutButton, editProfileButton, redeemPointsProfileButton;
-    TextView username_text;
+    TextView username_text, points_earned_text;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,8 +103,30 @@ public class ProfileFragment extends Fragment {
         username_text = view.findViewById(R.id.username_text);
         editProfileButton = view.findViewById(R.id.editProfileButton);
         redeemPointsProfileButton = view.findViewById(R.id.redeemPointsProfileButton);
-
+        points_earned_text = view.findViewById(R.id.points_earned_text);
         username_text.setText(auth.getCurrentUser().getEmail());
+
+        db.collection("users").document(auth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Long greenpoints = documentSnapshot.getLong("greenpoints");
+                            if(greenpoints != null){
+                                points_earned_text.setText(String.valueOf(greenpoints));
+                            }
+                        } else {
+                            Log.d("Error", "Document does not exist");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Error", "Error getting document", e);
+                    }
+                });
 
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,8 +14,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.devarshukani.green_user.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,15 +35,16 @@ public class RegisterUserDetailsActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private  FirebaseFirestore db;
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(RegisterUserDetailsActivity.this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("userId", null);
-        editor.apply();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(RegisterUserDetailsActivity.this);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString("userId", null);
+//        editor.apply();
+//
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,11 @@ public class RegisterUserDetailsActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+
+        Intent intent = getIntent();
+        String email = intent.getStringExtra("email");
+        String password = intent.getStringExtra("password");
 
 
 
@@ -82,26 +91,59 @@ public class RegisterUserDetailsActivity extends AppCompatActivity {
                     userdetails.put("fname", fname);
                     userdetails.put("lname", lname);
                     userdetails.put("contact", contact);
+                    userdetails.put("usertype", "regular");
+                    userdetails.put("greenpoints", 0);
 
-                    db.collection("users").document(auth.getCurrentUser().getUid())
-                            .set(userdetails)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(getApplicationContext(), "Successfully added to firestore", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("Error", "Error adding document", e);
-                                    Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(RegisterUserDetailsActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+
+                                db.collection("users").document(auth.getCurrentUser().getUid())
+                                        .set(userdetails)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+//                                                Toast.makeText(getApplicationContext(), "Successfully added to firestore", Toast.LENGTH_SHORT).show();
+
+
+                                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Error", "Error adding document", e);
+                                                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                            }
+                            else{
+                                Toast.makeText(RegisterUserDetailsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    });
+
+//                    Toast.makeText(RegisterUserDetailsActivity.this, auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+
+
                 }
+
+
+
+
+
+
+
+
+
+
+
 
             }
         });

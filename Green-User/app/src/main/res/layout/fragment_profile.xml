@@ -93,7 +93,7 @@
                         android:id="@+id/points_earned_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="50345"
+                        android:text=""
                         android:textColor="@color/green"
                         android:textSize="30sp"
                         android:fontFamily="@font/sf_pro_display_bold"/>

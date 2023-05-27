@@ -58,20 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
                     registerRePassword.setError("Values does not match");
                 }
                 else{
-                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, "New User Created Successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), RegisterUserDetailsActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                            else{
-                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    Intent intent = new Intent(getApplicationContext(), RegisterUserDetailsActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("password", password);
+                    startActivity(intent);
                 }
 
 

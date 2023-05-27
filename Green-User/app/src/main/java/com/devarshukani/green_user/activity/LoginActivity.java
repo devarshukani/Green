@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText loginPassword;
     private Button loginButton;
     private FirebaseFirestore db;
+    String usertype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,28 @@ public class LoginActivity extends AppCompatActivity {
         String userId = preferences.getString("userId", null);
 
         if (userId != null) {
+//            db.collection("users").document(auth.getCurrentUser().getUid())
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                DocumentSnapshot document = task.getResult();
+//
+//                                if (document.exists()) {
+//                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                                    startActivity(intent);
+//                                    LoginActivity.this.finish();
+//                                } else {
+//                                    Intent intent = new Intent(LoginActivity.this, RegisterUserDetailsActivity.class);
+//                                    startActivity(intent);
+//                                    LoginActivity.this.finish();
+//                                }
+//                            } else {
+//                                Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             LoginActivity.this.finish();
@@ -69,50 +92,49 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(AuthResult authResult) {
 
-                                String userId = auth.getCurrentUser().getUid();
-                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("userId", userId);
-                                editor.apply();
+                                String uid = authResult.getUser().getUid();
 
-                                db.collection("users").document(auth.getCurrentUser().getUid())
+                                db.collection("users").document(uid)
                                         .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    DocumentSnapshot document = task.getResult();
-                                                    if (document.exists()) {
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                if (documentSnapshot.exists()) {
+                                                    String usertype = documentSnapshot.getString("usertype");
+
+                                                    if(usertype.equals("regular")){
+                                                        String userId = auth.getCurrentUser().getUid();
+                                                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                                                        SharedPreferences.Editor editor = preferences.edit();
+                                                        editor.putString("userId", userId);
+                                                        editor.apply();
+
                                                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                                         startActivity(intent);
                                                         LoginActivity.this.finish();
-                                                    } else {
-                                                        Intent intent = new Intent(LoginActivity.this, RegisterUserDetailsActivity.class);
-                                                        startActivity(intent);
-                                                        LoginActivity.this.finish();
+                                                    }
+                                                    else{
+                                                        Toast.makeText(LoginActivity.this, "User doesn't have this auth access", Toast.LENGTH_SHORT).show();
                                                     }
                                                 } else {
-                                                    Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                                    Log.d("Error", "Document does not exist");
                                                 }
                                             }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Error", "Error getting document", e);
+                                            }
                                         });
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-//                                                startActivity(intent);
-//                                                LoginActivity.this.finish();
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                Intent intent = new Intent(LoginActivity.this, RegisterUserDetailsActivity.class);
-//                                                startActivity(intent);
-//                                                LoginActivity.this.finish();
-//                                            }
-//                                        });
 
+
+//                                String userId = auth.getCurrentUser().getUid();
+//                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+//                                SharedPreferences.Editor editor = preferences.edit();
+//                                editor.putString("userId", userId);
+//                                editor.apply();
+//
 //                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 //                                startActivity(intent);
 //                                LoginActivity.this.finish();

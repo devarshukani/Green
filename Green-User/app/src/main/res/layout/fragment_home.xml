@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/helloHomeTextView"
-            android:text="Hello Devarsh,"
+            android:text="Hello,"
             android:textSize="30sp"
             android:textColor="@color/darkgray"
             android:layout_width="wrap_content"
@@ -143,7 +143,7 @@
 
         <TextView
             android:id="@+id/wasteRecycleCountTextView"
-            android:text="15kg of waste recycled! Thank you for helping us preserve the planet."
+            android:text="Let's keep out planet clean"
             android:textSize="20sp"
             android:textColor="@color/gray"
             android:layout_width="wrap_content"
