@@ -54,44 +54,52 @@
 
 
 
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/wastePickupClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@drawable/button_background"
-            android:layout_marginTop="20dp"
-            android:padding="15dp">
+            android:layout_marginTop="20dp">
 
-            <TextView
-                android:id="@+id/button_heading"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Waste Pickup"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:fontFamily="@font/sf_pro_display_bold" />
+                android:layout_gravity="bottom"
+                android:background="@drawable/button_background"
+                android:padding="15dp">
 
-            <TextView
-                android:id="@+id/button_subheading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button_heading"
-                android:text="schedule your tomorrow's pickup"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:fontFamily="@font/sf_pro_display_regular"/>
+                <TextView
+                    android:id="@+id/button_heading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waste Pickup"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/sf_pro_display_bold" />
 
-            <ImageView
-                android:id="@+id/button_icon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_share_location"
-                android:scaleType="fitCenter"
-                android:layout_marginStart="8dp" />
+                <TextView
+                    android:id="@+id/button_subheading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/button_heading"
+                    android:text="schedule your tomorrow's pickup"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/sf_pro_display_regular"/>
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/button_icon"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_share_location"
+                    android:scaleType="fitCenter"
+                    android:layout_marginStart="8dp" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
 
 
 

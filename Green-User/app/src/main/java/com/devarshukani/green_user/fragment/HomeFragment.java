@@ -1,22 +1,35 @@
 package com.devarshukani.green_user.fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devarshukani.green_user.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +51,8 @@ public class HomeFragment extends Fragment {
     FirebaseAuth auth;
     FirebaseFirestore db;
     TextView helloHomeTextView;
+    CardView wastePickupClick;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,6 +94,7 @@ public class HomeFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         helloHomeTextView = view.findViewById(R.id.helloHomeTextView);
+        wastePickupClick = view.findViewById(R.id.wastePickupClick);
 
         db.collection("users").document(auth.getCurrentUser().getUid())
                 .get()
@@ -101,6 +117,56 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
+        wastePickupClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                    FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        // Get the latitude and longitude
+                                        double latitude = location.getLatitude();
+                                        double longitude = location.getLongitude();
+
+                                        Map<String, Object> userlocationdata = new HashMap<>();
+                                        userlocationdata.put("latitude", latitude);
+                                        userlocationdata.put("longitude", longitude);
+
+                                        db.collection("userlocation").document(auth.getCurrentUser().getUid())
+                                                .set(userlocationdata)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        // Location data stored successfully
+                                                        Toast.makeText(getContext(), "Location Saved", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // Failed to store location data
+                                                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                                                        Log.d("ERROR",e.toString());
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+
+                } else {
+                    // Permission not granted, request it from the user
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+                }
+
+
+            }
+        });
 
         return view;
     }
