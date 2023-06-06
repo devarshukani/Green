@@ -1,17 +1,18 @@
 package com.devarshukani.green_collector;
 
+import static android.graphics.Color.GREEN;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -23,23 +24,23 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PendingResult;
-import com.google.maps.internal.PolylineEncoding;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DirectionsRoute;
-import com.google.maps.model.EncodedPolyline;
-import com.google.maps.model.TravelMode;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
@@ -48,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-    private LatLng destination; // Destination location
-
+    private LatLng destination, source; // Destination location
     private Polyline routePolyline; // Polyline for the route
+    private List<LatLng> routePoints; // List of points for the route
     private LatLng currentLocation;
 
     @Override
@@ -75,171 +76,199 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         fabRecenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                recenterMap();
+                // Set the destination and source coordinates (dummy values for demonstration)
+                destination = new LatLng(37.7749, -122.4194); // San Francisco
+                source = new LatLng(37.7749, -122.4312); // Source location
 
+                // Call Directions API to get the optimized route and draw the polyline
+                getDirections(source, destination);
             }
         });
-
-        // Set the destination location (replace with your desired destination coordinates)
-        destination = new LatLng(22.3071364, 70.8151765);
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Location location = locationResult.getLastLocation();
-                if (location != null) {
-                    updateCurrentLocation(location);
-                }
-            }
-        };
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
-
-        // Check location permissions
-        if (checkLocationPermissions()) {
-            // Permissions already granted, start location updates
-            startLocationUpdates();
+        // Check for location permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            setupLocationUpdates();
         } else {
-            // Request location permissions
-            requestLocationPermissions();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
+
+//        // Set the destination and source coordinates (dummy values for demonstration)
+//        destination = new LatLng(37.7749, -122.4194); // San Francisco
+//        source = new LatLng(37.7749, -122.4312); // Source location
+//
+//        // Call Directions API to get the optimized route and draw the polyline
+//        getDirections(source, destination);
     }
 
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private void setupLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000); // Update location every 5 seconds
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+                        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        // Update current location on the map
+                        updateCurrentLocationMarker(currentLocation);
+                    }
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        fusedLocationProviderClient.requestLocationUpdates(createLocationRequest(), locationCallback, null);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
-    private LocationRequest createLocationRequest() {
-        return LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(1000); // Update interval in milliseconds
-    }
+    private void getDirections(LatLng source, LatLng destination) {
+        // Build the Directions API URL
+        String directionsUrl = "https://maps.googleapis.com/maps/api/directions/json?" +
+                "origin=" + source.latitude + "," + source.longitude +
+                "&destination=" + destination.latitude + "," + destination.longitude +
+                "&key=AIzaSyAcuHc_bMfcvjREIQMow4PGmdfTIIy0qgc";
 
-    private void updateCurrentLocation(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+        // Create an HTTP client
+        OkHttpClient client = new OkHttpClient();
 
-        currentLocation = new LatLng(latitude, longitude);
-
-        // Add a marker to the map
-        googleMap.addMarker(new MarkerOptions()
-                .position(currentLocation));
-
-        // Draw the route
-        drawRoute();
-    }
-
-    private void drawRoute() {
-        if (routePolyline != null) {
-            routePolyline.remove();
-        }
-
-        // Create the GeoApiContext object with your API key
-        GeoApiContext geoApiContext = new GeoApiContext.Builder()
-                .apiKey("AIzaSyAcuHc_bMfcvjREIQMow4PGmdfTIIy0qgc")
+        // Create the request
+        Request request = new Request.Builder()
+                .url(directionsUrl)
                 .build();
 
-        // Create the Directions API request
-        DirectionsApiRequest directionsRequest = DirectionsApi.newRequest(geoApiContext)
-                .origin(currentLocation.latitude + "," + currentLocation.longitude)
-                .destination(destination.latitude + "," + destination.longitude)
-                .mode(TravelMode.DRIVING);
-
-        // Asynchronously execute the Directions API request
-        directionsRequest.setCallback(new PendingResult.Callback<DirectionsResult>() {
+        // Make the API call asynchronously
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResult(DirectionsResult result) {
-                // Process the Directions API response
-                if (result.routes != null && result.routes.length > 0) {
-                    DirectionsRoute route = result.routes[0];
-
-                    // Extract the overview polyline from the route
-                    EncodedPolyline overviewPolyline = route.overviewPolyline;
-
-                    // Decode the polyline into a list of LatLng points
-                    List<com.google.maps.model.LatLng> routePoints = PolylineEncoding.decode(overviewPolyline.getEncodedPath());
-
-                    // Convert the routePoints to LatLng objects used by Google Maps Android API
-                    List<LatLng> androidRoutePoints = new ArrayList<>();
-                    for (com.google.maps.model.LatLng point : routePoints) {
-                        androidRoutePoints.add(new LatLng(point.lat, point.lng));
-                    }
-
-                    // Create the PolylineOptions and set its properties
-                    PolylineOptions polylineOptions = new PolylineOptions()
-                            .addAll(androidRoutePoints)
-                            .width(5f)
-                            .color(Color.BLUE);
-
-
-                    // Add the polyline to the map
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            routePolyline = googleMap.addPolyline(polylineOptions);
-
-                            // Move the camera to include both the current location and the destination
-                            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder()
-                                    .include(currentLocation)
-                                    .include(destination);
-                            LatLngBounds bounds = boundsBuilder.build();
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-                        }
-                    });
-                }
+            public void onFailure(Call call, IOException e) {
+                // Handle API call failure
+                e.printStackTrace();
             }
 
             @Override
-            public void onFailure(Throwable e) {
-                // Handle any errors that occurred during the Directions API request
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, "Failed to get directions", Toast.LENGTH_SHORT).show();
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String jsonData = response.body().string();
+                        JSONObject jsonObject = new JSONObject(jsonData);
+
+                        // Parse the response to retrieve the route points
+                        routePoints = parseRoutePoints(jsonObject);
+
+                        // Draw the polyline on the map
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                drawPolyline();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
             }
         });
     }
 
-    private boolean checkLocationPermissions() {
-        int coarseLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        int fineLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+    private List<LatLng> parseRoutePoints(JSONObject jsonObject) throws JSONException {
+        List<LatLng> points = new ArrayList<>();
 
-        return coarseLocationPermission == PackageManager.PERMISSION_GRANTED &&
-                fineLocationPermission == PackageManager.PERMISSION_GRANTED;
+        JSONArray routesArray = jsonObject.getJSONArray("routes");
+        if (routesArray.length() > 0) {
+            JSONObject route = routesArray.getJSONObject(0);
+            JSONObject overviewPolyline = route.getJSONObject("overview_polyline");
+            String encodedPolyline = overviewPolyline.getString("points");
+
+            points = decodePolyline(encodedPolyline);
+        }
+
+        return points;
     }
 
-    private void requestLocationPermissions() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                },
-                LOCATION_PERMISSION_REQUEST_CODE);
+    private List<LatLng> decodePolyline(String encodedPolyline) {
+        List<LatLng> points = new ArrayList<>();
+        int index = 0;
+        int length = encodedPolyline.length();
+        int latitude = 0, longitude = 0;
+
+        while (index < length) {
+            int b;
+            int shift = 0;
+            int result = 0;
+
+            do {
+                b = encodedPolyline.charAt(index++) - 63;
+                result |= (b & 0x1F) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            latitude += dlat;
+
+            shift = 0;
+            result = 0;
+
+            do {
+                b = encodedPolyline.charAt(index++) - 63;
+                result |= (b & 0x1F) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            longitude += dlng;
+
+            points.add(new LatLng(latitude / 1E5, longitude / 1E5));
+        }
+
+        return points;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates();
-            } else {
-                Toast.makeText(this, "Location permissions required", Toast.LENGTH_SHORT).show();
-            }
+    private void drawPolyline() {
+        if (routePoints != null && routePoints.size() > 0) {
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .addAll(routePoints)
+                    .width(10)
+                    .color(GREEN);
+
+            routePolyline = googleMap.addPolyline(polylineOptions);
+
+            // Move the camera to the destination
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destination, 18f));
+        }
+    }
+
+    private void updateCurrentLocationMarker(LatLng location) {
+        // Update the marker for current location on the map
+        // Remove previous marker if exists
+        // Add new marker for current location
+    }
+
+    private void recenterMap() {
+        // Recenter the map to the current location
+        if (currentLocation != null) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18f));
         }
     }
 
@@ -271,12 +300,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        if (fusedLocationProviderClient != null && locationCallback != null) {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            setupLocationUpdates();
+        }
     }
 }
