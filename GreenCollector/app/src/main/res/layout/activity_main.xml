@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:apiKey="YOUR_API_KEY"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fabQrScanner"
+        app:shapeAppearance="@mipmap/ic_launcher_round"
+        android:backgroundTint="@color/lightgray"
+        app:elevation="8dp"
+        app:tint="@color/darkgray" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabQrScanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/qr_scan"
+        app:layout_constraintTop_toBottomOf="@+id/fabProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@mipmap/ic_launcher_round"
+        android:backgroundTint="@color/lightgray"
+        app:elevation="8dp"
+        app:tint="@color/darkgray" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabReachedDestination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/location"
+        app:layout_constraintTop_toBottomOf="@+id/fabQrScanner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@mipmap/ic_launcher_round"
+        android:backgroundTint="@color/lightgray"
+        app:elevation="8dp"
+        app:tint="@color/darkgray" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRecenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/target"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@mipmap/ic_launcher_round"
+        android:backgroundTint="@color/lightgray"
+        app:elevation="8dp"
+        app:tint="@color/darkgray"
+        app:fabSize="mini"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
